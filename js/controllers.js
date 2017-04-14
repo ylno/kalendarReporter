@@ -5,12 +5,19 @@ angular.module('rvControllers', []);
 angular.module('rvControllers').controller('Seite1Controller', ['$scope', '$rootScope', '$window', '$log', '$q', '$location', 'GAPI', 'GAPIService', 'Calendar', function ($scope, $rootScope, $window, $log, $q, $location, GAPI, GAPIService, Calendar) {
 	$log.debug('init Seite1 ');
 
+	var date = new Date();
+	var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+	var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
 
 	$scope.calendarList = "";
 	$scope.data = {
-		'choosenCalendar': {}
+		'choosenCalendar': {},
+		'startdate': firstDay,
+		'enddate': lastDay
 	};
 	$scope.resultList = [];
+
 
 	var postInitiation = function () {
 		// load all your assets
@@ -53,7 +60,10 @@ angular.module('rvControllers').controller('Seite1Controller', ['$scope', '$root
 		$scope.total = 0.0;
 		$scope.resultList = [];
 
-		var params = {};
+		var params = {
+			'timeMin': $scope.data.startdate,
+			'timeMax': $scope.data.enddate
+		};
 
 		angular.forEach($scope.data.choosenCalendar, function (isChoosen, calendarId) {
 
@@ -64,9 +74,11 @@ angular.module('rvControllers').controller('Seite1Controller', ['$scope', '$root
 					// $scope.displayResult = list.items;
 					angular.forEach(list.items, function (e) {
 						var event = new Event(e);
-						$scope.displayResult = $scope.displayResult + event.summary + " " + event.getDuration() + "\n";
-						$scope.total = $scope.total + event.getDuration();
-						$scope.resultList.push(event);
+						if (($scope.data.filter == null && $scope.data.filter == '') || event.summary.indexOf($scope.data.filter) !== -1) {
+							$scope.displayResult = $scope.displayResult + event.summary + " " + event.getDuration() + "\n";
+							$scope.total = $scope.total + event.getDuration();
+							$scope.resultList.push(event);
+						}
 					});
 
 

@@ -24,6 +24,8 @@
 	<label>Enddatum <input type="date" ng-model="data.enddate" /></label>
 
 	<br/>
+	<label>Filter <input type="text" ng-model="data.filter"/></label>
+	<br/>
 	<button ng-click="startCalculation()">Auswerten</button>
 
 	Ergebnis: <b>{{total}} Stunden</b>
@@ -37,7 +39,7 @@
 	<!--<pre>{{resultList |json}}</pre>-->
 
 
-	<!--<pre><code>{{data | json}}</code></pre>-->
+	<pre><code>{{data | json}}</code></pre>
 	<!--<pre><code>{{calendarList | json}}</code></pre>-->
 
 
