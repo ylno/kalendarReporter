@@ -8,24 +8,24 @@ angular.module('rvControllers').controller('Seite1Controller', ['$scope', '$root
 
 	$scope.calendarList = "";
 	$scope.data = {
-		'choosenCalendar' : {}
+		'choosenCalendar': {}
 	};
 	$scope.resultList = [];
 
 	var postInitiation = function () {
 		// load all your assets
 		$log.debug("controller Seite1 fertig ", $scope);
-		GAPI.init().then(function(app) {
+		GAPI.init().then(function (app) {
 			$log.debug("auth ok", app);
 			$scope.showLoginButton = false;
 
-			Calendar.listCalendarList().then(function(result) {
+			Calendar.listCalendarList().then(function (result) {
 				$scope.calendarList = result.items;
-			}, function(error) {
+			}, function (error) {
 				$log.error(error);
 			});
 
-		}, function(onError) {
+		}, function (onError) {
 			$log.debug("auth failed", app);
 		});
 
@@ -39,45 +39,45 @@ angular.module('rvControllers').controller('Seite1Controller', ['$scope', '$root
 		this.start = new Date(event.start.dateTime);
 		this.end = new Date(event.end.dateTime);
 
-		this.getDuration = function() {
+		this.getDuration = function () {
 
-			var number = Math.abs( this.end.getTime()-this.start.getTime()) / 36e5;
-			return this._isFloat(number) ? number : 0;
+			var number = Math.abs(this.end.getTime() - this.start.getTime()) / 36e5;
+			return !isNaN(number) ? number : 0;
 		}
 
 
-		this._isFloat = function (x) { return !!(x % 1); }
 	}
 
-	$scope.startCalculation = function() {
-		$scope.displayResult = 'Please wait...';
+	$scope.startCalculation = function () {
 
 		$scope.total = 0.0;
+		$scope.resultList = [];
 
-		var params = {
+		var params = {};
 
-		};
+		angular.forEach($scope.data.choosenCalendar, function (isChoosen, calendarId) {
 
-		Calendar.listEvents('mfrankl@gmail.com', params).then(function(list){
-			$log.debug(list);
+			if (isChoosen) {
+				Calendar.listEvents(calendarId, params).then(function (list) {
+					$log.debug(list);
 
-			// $scope.displayResult = list.items;
-			angular.forEach(list.items, function(e) {
-				var event = new Event(e);
-				$scope.displayResult =$scope.displayResult + event.summary + " " + event.getDuration() + "\n";
-				$scope.total = $scope.total +event.getDuration();
-				$scope.resultList.push(event);
-			});
+					// $scope.displayResult = list.items;
+					angular.forEach(list.items, function (e) {
+						var event = new Event(e);
+						$scope.displayResult = $scope.displayResult + event.summary + " " + event.getDuration() + "\n";
+						$scope.total = $scope.total + event.getDuration();
+						$scope.resultList.push(event);
+					});
 
 
-		}, function(error) {
-			$log.error(error);
+				}, function (error) {
+					$log.error(error);
+				});
+			}
 		});
-
 	}
 
 	GAPIService.registerClient(postInitiation);
-
 
 
 }]);
@@ -91,7 +91,6 @@ angular.module('rvControllers').controller('Seite2Controller', ['$scope', '$root
 	}
 
 	GAPIService.registerClient(postInitiation);
-
 
 
 	$scope.agetCalendars = function () {
