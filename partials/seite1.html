@@ -1,0 +1,45 @@
+<div>
+	<h1>Kalenderauswertung Deines Google-Kalenders</h1>
+
+	<button ng-click="handleAuthClick()" ng-show="showLoginButton">Anmelden</button>
+	<button ng-click="handleAuthClick()" ng-show="!showLoginButton">Abmelden</button>
+
+	<p>Welche Kalender möchtest du auswerten?</p>
+
+	<ul>
+		<li ng-repeat="calendar in calendarList">
+			<label>
+				<input type="checkbox" ng-model="data.choosenCalendar[calendar.id]" >{{calendar.summary}}</input>
+			</label>
+		</li>
+	</ul>
+
+	<label for="singleSelect">Auswertungszeitraum:
+	<select name="singleSelect" ng-model="data.singleSelect">
+		<option value="1">Aktueller Monat</option>
+		<option value="2">Letzer Monat</option>
+	</select></label><br>
+
+	<label>Startdatum <input type="date" ng-model="data.startdate" /></label>
+	<label>Enddatum <input type="date" ng-model="data.enddate" /></label>
+
+	<br/>
+	<button ng-click="startCalculation()">Auswerten</button>
+
+	Ergebnis: <b>{{total}} Stunden</b>
+	<ul>
+		<div ng-repeat="event in resultList">
+		<li><b>{{event.getDuration()}}h</b> - {{event.summary}}</li>
+	</div>
+	</ul>
+
+
+
+	<pre>{{resultList |json}}</pre>
+
+
+	<pre><code>{{data | json}}</code></pre>
+	<pre><code>{{calendarList | json}}</code></pre>
+
+
+</div>
