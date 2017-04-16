@@ -376,6 +376,7 @@ angular.module('gapi', [])
         deferred = $q.defer(),
         attemptCounter = 0,
         onAuth = function (response) {
+					$log.debug("login response: ", response);
           attemptCounter++;
           if(attemptCounter > 3) {
               deferred.reject('Login attempt failed. Attempted to login ' + attemptCounter + ' times.');
@@ -394,8 +395,10 @@ angular.module('gapi', [])
               gapi.auth.authorize({
                 client_id: app.clientId,
                 scope: app.scopes,
-                immediate: true
-                }, onAuth
+									// immediate: true
+								}, onAuth, function (error) {
+									$log.debug("error", error);
+								}
               );
           }
         };
@@ -406,7 +409,9 @@ angular.module('gapi', [])
         client_id: app.clientId,
         scope: app.scopes,
         immediate: true
-        }, onAuth
+				}, onAuth, function (error) {
+					$log.debug("error", error);
+				}
       );
 
       return deferred.promise;
