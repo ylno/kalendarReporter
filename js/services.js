@@ -31,23 +31,7 @@ angular.module('rvServices').factory('GAPIService', ['$resource', '$http', '$log
 
 	};
 
-	var clientId = '616754906879-sgfb40diik6vokq42ic4qgsgcu10s6fu.apps.googleusercontent.com';
-	var scopes = 'https://www.googleapis.com/auth/calendar.readonly';
 
-	service.doAuth = function () {
-		var deferred = $q.defer();
-		gapi.auth2.authorize({client_id: clientId, scope: scopes, immediate: false}, function (authResult) {
-			$log.debug("authresult", authResult);
-			if (authResult.status.signed_in == true) {
-				deferred.resolve(true);
-			} else {
-				deferred.reject(false);
-			}
-
-		});
-
-		return deferred.promise;
-	};
 
 	service.getCalendars = function () {
 		var deferred = $q.defer();
@@ -57,33 +41,25 @@ angular.module('rvServices').factory('GAPIService', ['$resource', '$http', '$log
 			$log.debug(error);
 		});
 
+	};
 
-		// gapi.client.googleApiClient.load('calendar', 'v3', function () {
-		// 	var request = gapi.client.calendar.calendarList.list();
-		// 	request.execute(function (resp) {
-		//
-		// 		$log.debug("response ", resp);
-		//
-		// 		angular.forEach(resp.items, function (item) {
-		// 			$log.debug(item.id);
-		// 		});
-		//
-		//
-		// 	});
-		//
-		// });
+	service.signOut = function () {
+		var token = gapi.auth.getToken();
+		if (token) {
+			var accessToken = gapi.auth.getToken().access_token;
+			if (accessToken) {
+				$http({
+					method: 'GET',
+					url: 'https://accounts.google.com/o/oauth2/revoke?token=' + accessToken
+				});
+			}
+		}
+		gapi.auth.setToken(null);
+		gapi.auth.signOut();
+		$log.debug("signout ready");
 	};
 
 	return service;
 }]);
 
 
-// var request1 = gapi.client.calendar.events.list({
-// 	'calendarId': 'primary',
-// 	'timeMin': '2015-12-23T04:26:52.000Z'//Suppose that you want get data after 23 Dec 2014
-// });
-// request1.execute(function(resp){
-// 	angular.forEach( resp.items, function( item ) {
-// 		$log.debug(item.id);// here you give all events from google calendar
-// 	});
-// });

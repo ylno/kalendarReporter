@@ -408,7 +408,7 @@ angular.module('gapi', [])
       gapi.auth.authorize({
         client_id: app.clientId,
         scope: app.scopes,
-        immediate: true
+				// immediate: true
 				}, onAuth, function (error) {
 					$log.debug("error", error);
 				}
