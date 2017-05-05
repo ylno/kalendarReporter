@@ -23,7 +23,7 @@ angular.module('rvControllers').controller('Seite1Controller', ['$scope', '$root
 		// load all your assets
 		$log.debug("controller Seite1 fertig ", $scope);
 		GAPI.init().then(function (app) {
-			$log.debug("auth ok", app);
+			$log.debug("auto login ok", app);
 			$scope.showLoginButton = false;
 
 			Calendar.listCalendarList().then(function (result) {
@@ -34,13 +34,33 @@ angular.module('rvControllers').controller('Seite1Controller', ['$scope', '$root
 
 		}, function (onError) {
 			$log.debug("auth failed", onError);
+			$scope.showLoginButton = true;
+		}, function (notify) {
+			$log.debug("defered notify", notify);
 		});
+		$log.debug("end of initialisation seite 1");
 
 
 	};
 
 	$scope.login = function () {
-		postInitiation();
+		GAPI.authorize().then(function (app) {
+			$log.debug("login ok", app);
+			$scope.showLoginButton = false;
+
+			Calendar.listCalendarList().then(function (result) {
+				$scope.calendarList = result.items;
+			}, function (error) {
+				$log.error(error);
+			});
+
+		}, function (onError) {
+			$log.debug("auth failed", onError);
+			$scope.showLoginButton = true;
+		}, function (notify) {
+			$log.debug("defered notify", notify);
+		});
+		$log.debug("end of Login");
 	}
 
 
