@@ -1,39 +1,55 @@
-<div>
-	<h1>Kalenderauswertung Deines Google-Kalenders</h1>
+<div class="starter-template">
 
-	<button ng-click="login()" ng-show="showLoginButton">Anmelden</button>
-	<button ng-click="logout()" ng-show="!showLoginButton">Abmelden</button>
+
+	<!--<h1>Kalenderauswertung Deines Google-Kalenders</h1>-->
+
+	<button ng-click="login()" ng-show="showLoginButton" class="btn btn-primary btn-lg">Anmelden</button>
+	<button ng-click="logout()" ng-show="!showLoginButton" class="btn btn-primary btn-lg">Abmelden</button>
 
 	<div ng-show="!showLoginButton">
-		<p>Welche Kalender möchtest du auswerten?</p>
-
-		<ul>
-			<li ng-repeat="calendar in calendarList">
-				<label>
-					<input type="checkbox" ng-model="data.choosenCalendar[calendar.id]">{{calendar.summary}}</input>
-				</label>
-			</li>
-		</ul>
+		<div class="row">
+			<div class="col-md-12">
+				<p>Welche Kalender möchtest du auswerten?</p>
+			</div>
+			<div class="col-md-12">
+				<div ng-repeat="calendar in calendarList">
+					<label>
+						<input type="checkbox" ng-model="data.choosenCalendar[calendar.id]">{{calendar.summary}}</input>
+					</label>
+				</div>
+			</div>
+		</div>
 
 		<!--label for="singleSelect">Auswertungszeitraum:
 		<select name="singleSelect" ng-model="data.singleSelect">
 			<option value="1">Aktueller Monat</option>
 			<option value="2">Letzer Monat</option>
 		</select></label><br-->
-
-		<label>Startdatum <input type="date" ng-model="data.startdate"/></label>
-		<label>Enddatum <input type="date" ng-model="data.enddate"/></label>
-
+		<div class="row">
+			<div class="col-md-3">
+				<label for="startdatum">Startdatum </label>
+			</div>
+			<div class="col-md-3">
+				<input type="date" name="startdatum" ng-model="data.startdate"/>
+			</div>
+			<div class="col-md-3">
+				<label for="enddatum">Enddatum</label>
+			</div>
+			<div class="col-md-3">
+				<input type="date" name="enddatum" ng-model="data.enddate"/>
+			</div>
+		</div>
 		<br/>
 		<label>Filter <input type="text" ng-model="data.filter"/></label>
 		<br/>
-		<button ng-click="startCalculation()">Auswerten</button>
+		<button ng-click="startCalculation()" class="btn btn-primary btn-lg">Auswerten</button>
 
 		Ergebnis: <b>{{total | number: 2}} Stunden</b>
 		<table class="table table-striped">
 			<thead>
 			<tr>
 				<th>Datum</th>
+				<th>Uhrzeit</th>
 				<th>Dauer</th>
 				<th>Beschreibung</th>
 			</tr>
@@ -42,6 +58,7 @@
 
 			<tr ng-repeat="event in resultList">
 				<td>{{event.start | date}}</td>
+				<td>{{event.start | date:'HH:mm'}}-{{event.end | date:'HH:mm'}}</td>
 				<td>{{event.getDuration() | number: 2}}h</td>
 				<td>{{event.summary}}</td>
 			</tr>
