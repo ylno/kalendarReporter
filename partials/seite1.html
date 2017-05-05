@@ -56,7 +56,7 @@
 			</thead>
 			<tbody>
 
-			<tr ng-repeat="event in resultList">
+			<tr ng-repeat="event in resultList | orderBy: 'start'">
 				<td>{{event.start | date}}</td>
 				<td>{{event.start | date:'HH:mm'}}-{{event.end | date:'HH:mm'}}</td>
 				<td>{{event.getDuration() | number: 2}}h</td>

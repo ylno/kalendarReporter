@@ -26,11 +26,7 @@ angular.module('rvControllers').controller('Seite1Controller', ['$scope', '$root
 			$log.debug("auto login ok", app);
 			$scope.showLoginButton = false;
 
-			Calendar.listCalendarList().then(function (result) {
-				$scope.calendarList = result.items;
-			}, function (error) {
-				$log.error(error);
-			});
+			$scope.getCalendarList();
 
 		}, function (onError) {
 			$log.debug("auth failed", onError);
@@ -48,11 +44,7 @@ angular.module('rvControllers').controller('Seite1Controller', ['$scope', '$root
 			$log.debug("login ok", app);
 			$scope.showLoginButton = false;
 
-			Calendar.listCalendarList().then(function (result) {
-				$scope.calendarList = result.items;
-			}, function (error) {
-				$log.error(error);
-			});
+			$scope.getCalendarList();
 
 		}, function (onError) {
 			$log.debug("auth failed", onError);
@@ -61,7 +53,15 @@ angular.module('rvControllers').controller('Seite1Controller', ['$scope', '$root
 			$log.debug("defered notify", notify);
 		});
 		$log.debug("end of Login");
-	}
+	};
+
+	$scope.getCalendarList = function () {
+		Calendar.listCalendarList().then(function (result) {
+			$scope.calendarList = result.items;
+		}, function (error) {
+			$log.error(error);
+		});
+	};
 
 
 	$scope.logout = function () {
